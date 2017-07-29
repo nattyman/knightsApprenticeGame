@@ -1,0 +1,545 @@
+
+<doctype html>
+<html>
+<head>
+
+<style>
+  body {
+background: #7ec0ee; /* Old browsers */
+background: -moz-linear-gradient(top,  #7ec0ee 39%, #7ec0ee 86%, #627d4d 90%, #1f3b08 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(39%,#7ec0ee), color-stop(86%,#7ec0ee), color-stop(90%,#627d4d), color-stop(100%,#1f3b08)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #7ec0ee 39%,#7ec0ee 86%,#627d4d 90%,#1f3b08 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #7ec0ee 39%,#7ec0ee 86%,#627d4d 90%,#1f3b08 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #7ec0ee 39%,#7ec0ee 86%,#627d4d 90%,#1f3b08 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #7ec0ee 39%,#7ec0ee 86%,#627d4d 90%,#1f3b08 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7ec0ee', endColorstr='#1f3b08',GradientType=0 ); /* IE6-9 */
+/*background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNiIgaGVpZ2h0PSI2Ij4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iNiIgZmlsbD0iI2VlZWVlZSI+PC9yZWN0Pgo8ZyBpZD0iYyI+CjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGZpbGw9IiNlNmU2ZTYiPjwvcmVjdD4KPHJlY3QgeT0iMSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgZmlsbD0iI2Q4ZDhkOCI+PC9yZWN0Pgo8L2c+Cjx1c2UgeGxpbms6aHJlZj0iI2MiIHg9IjMiIHk9IjMiPjwvdXNlPgo8L3N2Zz4=") ;*/
+
+
+  width: 100%;
+  text-align: center;
+}
+
+#main {
+  width: 1024px;
+  max-width: 90%;
+  margin: 0 auto;
+
+}
+
+div {
+	text-align: left;
+}
+
+.wrapper {
+  border: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  padding: 5px;
+  margin: 10px 2px;
+  width: 300px;
+  float: left;
+
+}
+
+#store-wrapper {
+	width: 100%;
+}
+
+.storeItem {
+	max-width: 300px;
+	float: left;
+	display: inline-block;
+	margin: 5px;
+	/*border-style: solid;*/
+
+}
+
+.barGraph {
+	height: 10px;
+	background-color: blue;
+	display: inline-block;
+	margin: 5px 0 10px 0;
+}
+
+button {
+	font-size: 13px;
+	border-radius: 10px;
+	background-color: #0078e7;
+	color: #fff;
+	padding: 7px;
+}
+button:hover {
+	background-color: #e70;
+}
+button:disabled {
+	background-color: #ccc;
+	color: #aaa;
+}
+
+h3 {
+	margin: 5px 2px;
+}
+
+</style>
+
+</head>
+<body>
+  <div id="main">
+  	<h1>Rain Collector</h1>
+    <div id="head">
+      <p>
+      	The Earth has been scorched by a massive sunspot that has turned much of the plannet into desserts.  Fresh water is more valuable than ever. It has started to rain and you need to collect as much rain water as possible.  You can then sell the water and build your own water empire.
+      </p>
+
+   </div>
+   <div id="msg"></div><div id="msg2"></div>
+   <div id="dashboard" style='visibility:hidden'>
+	   <div id="collection-wrapper" class="wrapper">
+	     <h3>Rain Collection</h3>
+	     <div id="glass" ></div>
+	     <div id="pitcher" ></div>
+	     <div id="bucket3"></div>
+	     <div id="bucket5"></div>
+	     <div id="bath"></div>
+	   </div>
+	   <div id='inventory-wrapper' class="wrapper">
+	   	 <h3>Inventory</h3>
+	     <div id='inventory'></div>
+	   	 <h3>Achievements</h3>
+	     <div id='achievements'></div>
+	   </div>
+	   <div id="extra-wrapper" class="wrapper">
+	   	<h3>Extras</h3>
+	   	<div id="rainMaker"></div>
+	   </div>
+	   <div id='store-wrapper' class="wrapper">
+	     <h3>Store</h3>
+	     <div id="store-glass" class="storeItem"></div>
+	     <div id="store-pitcher" class="storeItem"></div>
+	     <div id="store-bucket3" class="storeItem"></div>
+	     <div id="store-bucket5" class="storeItem"></div>
+	     <div id="store-bath" class="storeItem"></div>
+	   </div>
+
+	</div>
+
+</div> <!-- End Main Div -->
+<script>
+
+
+
+// Variables
+
+//Game Speed
+var gspeed = 20;  // 20 is a good speed
+var runTime = 0;
+var iterations = 0;
+
+// the glass is the standard capacity that all other containers are based off of.
+var standardCapacity = 100; // 400 is a good standard
+
+// Game Objects
+var glass = {
+	name: "Glass",
+	varName: "glass",
+	capacity: standardCapacity,
+	xvalue: 1,
+	price: 3,
+	totalSold: 0,
+	storeRefresh: 1,
+};
+
+var pitcher = {
+	name: "Pitcher",
+	varName: "pitcher",
+	capacity: standardCapacity * 6,
+	xvalue: 8,
+	price: 16,
+	totalSold: 0,
+	storeRefresh: 1,
+}
+
+var bucket3 = {
+	name: "3 Gallon Bucket",
+	varName: "bucket3",
+	capacity: standardCapacity * 13,
+	xvalue: 30,
+	price: 50,
+	totalSold: 0,
+	storeRefresh: 0,
+}
+
+var bucket5 = {
+	name: "5 Gallon Bucket",
+	varName: "bucket5",
+	capacity: standardCapacity * 30,
+	xvalue: 45,
+	price: 85,
+	totalSold: 0,
+	storeRefresh: 0,
+}
+
+var bath = {
+	name: "Bathtube",
+	varName: "bath",
+	capacity: standardCapacity * 200,
+	xvalue: 250,
+	price: 3000,
+	totalSold: 0,
+	storeRefresh: 0,
+}
+
+// starting inventory is 1 glass
+var inventory = {
+//	main: 1, // just a place holder for the main water level
+	glass: 1,
+	pitcher: 0,
+	bucket3: 0,
+	bucket5: 0,
+	bath: 0,
+//	cash: 0,
+}
+
+cash = 0;
+
+var waterLevel = {
+	//main: 0,
+	glass: 0,
+	pitcher: 0,
+	bucket3: 0,
+	bucket5: 0,
+	bath: 0,
+}
+
+var rainMaker = {
+
+	cost: 100, // starting cost. It goes up each time it is purchased
+	multiplier: .9, // The lower the number the more it speeds up the game
+	costMultiplier: 1.5, // How much to increase the cost each time it is purchased
+	refresh: 1, // Should the button be refreshed.  Prevents flickering
+
+}
+
+
+//////////////////
+// Acheivements //
+//////////////////
+
+var achievements = {
+	guppy: 0,
+	mino: 0,
+	goldfish: 0,
+	frog: 0,
+
+}
+
+var guppyBadge = {
+	number: 0, // number of times acheived
+
+}
+
+
+
+
+
+
+var i = 0;
+var g = 0;
+var y = 0;
+// var waterLevel = 0;
+var started = 0;
+var totalRainFall = 0;
+//var myRefresh = 0;
+//var cash = 0;
+
+// if (started) {
+
+// gameLoop();
+
+// }
+// else {
+	document.getElementById("msg").innerHTML = "<button id='getStarted' onclick='getStarted()'>Start Collecting Rain</button>";
+
+//}
+
+function getStarted(){
+	document.getElementById("msg").innerHTML = "It's raining, it's pouring...";
+	started = 1;
+	document.getElementById('dashboard').style.visibility = "visible";
+	document.getElementById('head').style.display = "none";
+
+	gameLoop();
+}
+
+///////////////////////////////////
+// Calculate Game Total Run Time //
+///////////////////////////////////
+
+
+function calcRunTime() {
+	iterations++;
+	runTime = (iterations / 650 * gspeed); // don't know why 650, seems like it should be 1000
+	runTime = runTime.toFixed(1);
+
+	totalRainFall =
+
+	document.getElementById("msg").innerHTML = "Total Game Time: " + runTime;
+}
+
+
+// Sell a Glass of Water
+
+function sellWater(container) {
+
+    var conVarName = container.varName;
+    var containerName = container.name;
+    var myValue = container.xvalue;
+    var myStock = inventory[conVarName];
+    var myTotalSold = container.totalSold;
+
+    // Add to the total amount sold for that container
+    myTotalSold = myTotalSold + myStock;
+    console.log(conVarName + " myTotalSold= " +  myTotalSold);
+    container.totalSold = myTotalSold;
+
+	//console.log("before waterLevel[" + conVarName + "] = " + waterLevel[conVarName] );
+
+
+	waterLevel[conVarName] = 0; // reset water level for the container to 0
+
+	// console.log("conName = " + conVarName );
+	// console.log("containerName = " + containerName );
+	// console.log("myValue = " + myValue );
+	// console.log("myStock = " + myStock );
+	//console.log("after waterLevel[" + conVarName + "] = " + waterLevel[conVarName] );
+
+
+	cash = cash + ( myValue * myStock );
+
+	// Disable sell button
+	 document.getElementById(conVarName).innerHTML = "Your " + containerName + " is full!<br><button value='sell" + conVarName+ "' disabled)'>Sell " + containerName + " of water?</button>";
+
+}
+
+function buyContainer(container) {
+
+	myContainer = eval(container).varName;
+	cash = cash - eval(container).price;
+	inventory[myContainer]++;
+	console.log("************** buy inventory container count = " + inventory[myContainer] );
+//	gameLoop();
+}
+
+
+// Display inventory
+function displayInventory() {
+
+	document.getElementById("inventory").innerHTML = "<h2>Cash: $" + cash + "</h2>\n";
+
+	for ( item in inventory ) {
+	//	console.log( "inventory.item: " + item + ":" + inventory[item] )
+
+      if ( inventory[item] > 0 ) {
+		document.getElementById("inventory").innerHTML += "<h3>" + item + ": " + inventory[item] + "</h3>\n";
+
+      }
+	}
+}
+
+function myStore( container ) { // container ) {
+
+	var y = "";
+	item = container;
+
+
+	// document.getElementById("store").innerHTML = "";
+	// for ( item in inventory ) {
+
+	//container = eval(container)
+	myContainer = eval(item).varName;
+	myContainerName = eval(myContainer).name;
+	myContainerPrice = eval(myContainer).price;
+    var myID = "store-" + myContainer;
+    var myRefresh = eval(item).storeRefresh;
+    //console.log("refresh = " + myRefresh);
+
+	   if ( cash < myContainerPrice ) {
+
+	   	  document.getElementById(myID).innerHTML = "You do NOT have enough money to purchase a " + myContainerName + " for $" + myContainerPrice + ".<br><button value='purchase' disabled>Purchase a " + myContainerName + "?</button><br>";
+	   	  myRefresh = 1;
+
+	   //	  console.log( "y: " + y );
+	   }
+	   else if (myRefresh == 1) {
+
+	   	  document.getElementById(myID).innerHTML = "You have enough money to purchase a " + myContainerName + " for $" + myContainerPrice + ".<br><button value='purchase' onclick='buyContainer(" + myContainer + ")'>Purchase a " + myContainerName + "?</button><br>";
+	   	  myRefresh = 0;
+
+	   	//  console.log( "y: " + y );
+  		 }
+ // 		 console.log("myID = " + myID);
+ // 		 document.getElementById(myID).innerHTML = y; // print out all of the store options
+  	// }
+
+  	eval(item).storeRefresh = myRefresh; // Set the global refresh for the container
+  	return y;
+
+}
+
+////////////////////////////////
+////       Acheivements       //
+////////////////////////////////
+
+function processA() {
+
+	for ( item in inventory ) {
+
+		myTotalSold = eval(item).totalSold;
+		threshold = 2;
+
+
+		if ( myTotalSold > threshold ) {
+			m = "Congrats you have sold " + threshold + " " + item + "! You have earned a Guppy Badge.";
+			guppyBadge++;
+			document.getElementById("msg").innerHTML = m;
+
+		}
+		else {
+			m = 0;
+		}
+		//if ( m ) {
+		//}
+
+
+	}
+
+
+
+}
+
+function displayA() {
+
+}
+
+
+////////////////////////////////
+////       Rain Maker         //
+////////////////////////////////
+// rain maker allows you to pay to speed up the rain.  Each time you pay for it the price goes up for the next time.
+
+function displayRainMaker(){
+
+  if ( cash >= rainMaker.cost ) {
+  	document.getElementById('rainMaker').innerHTML = "Pay a Rainmaker to speed up the rain for $" + rainMaker.cost + "? <button onclick='runRainMaker()'>Pay the Rainmaker</button>";
+  	rainMaker.refresh = 0;
+  }
+  else {
+  	document.getElementById('rainMaker').innerHTML = "Pay a Rainmaker to speed up the rain for $" + rainMaker.cost + "? <button onclick='runRainMaker()' disabled >Pay the Rainmaker</button>";
+  	rainMaker.refresh = 1;
+  }
+
+}
+
+function runRainMaker() {
+
+	cash = cash - rainMaker.cost;
+	gspeed = gspeed * rainMaker.multiplier;
+	rainMaker.cost = rainMaker.cost * rainMaker.costMultiplier ;
+	rainMaker.cost = rainMaker.cost.toFixed(0);
+	rainMaker.refresh = 1; // yes refresh the button
+
+}
+
+
+function gameLoop() {
+
+
+////////////////////////////////
+// Collect Water in Container //
+////////////////////////////////
+
+  if ( started ) {
+  //	waterLevel.main++;
+	for ( container in waterLevel ) { // loop through each waterLevel ogject
+
+		var myContainer = eval(container).varName;
+		//console.log( "myContainer: " + myContainer );
+
+
+		var myCapacity = eval(myContainer).capacity;
+
+		if ( inventory[myContainer] > 0 ) {
+
+			// waterLevel[myContainer]++;  // it was working here
+
+			// console.log("waterLevel[" + myContainer + "] = " + waterLevel[myContainer]);
+			// console.log("myCapacity = " + myCapacity );
+
+
+		  if ( waterLevel[myContainer] < myCapacity ) { //only increment if the container is NOT already full	  		if waterLevel.[i] <=
+			waterLevel[myContainer]++;  // this works
+			//waterLevel[myContainer] = waterLevel[myContainer].toFixed(2) + .05;
+			//waterLevel[myContainer] = waterLevel[myContainer].toFixed(2);
+			//console.log("waterLevel[myContainer] = " + waterLevel[myContainer]);
+
+			myWaterLevel = ( (waterLevel[myContainer] * 100) / myCapacity );
+
+	  	    // Write out how full the container is
+	  	    document.getElementById(myContainer).innerHTML = "Your " + container + " is " + myWaterLevel.toFixed(2) + "% full of water.<br><button value='sell" + myContainer + "' onclick='sellWater(" + myContainer + ")' disabled>Sell " + myContainer + " of water?</button><br>" + "<div class='barGraph' style='width:" + myWaterLevel.toFixed(2) + "%'></div>";
+	  	   }
+	  	   else if ( waterLevel[myContainer] == myCapacity ){ // If the container is full
+	     	document.getElementById(myContainer).innerHTML = "Your " + myContainer + " is full! Sell for $" + eval(myContainer).xvalue + "<br><button value='sell" + myContainer + "' onclick='sellWater(" + myContainer + ")'>Sell " + myContainer + " of water?</button><br>" + "<div class='barGraph' style='width:100%'></div>";
+
+
+	     	waterLevel[myContainer]++;  // this pushes the level one over so that the capacity won't be true for either less than or equal to
+
+	     	}
+
+
+	     }
+
+     // new
+     //var x = "";
+     myStore(myContainer);
+    // showMyStore( x );
+
+
+
+
+     }
+     calcRunTime();
+  	setTimeout(gameLoop, gspeed);
+  }
+
+
+     // var x = myStore(container);
+     // showMyStore( x );
+
+
+  displayInventory();
+
+  // if cash drops below rainMaker cost then update it
+  if ( cash < rainMaker.cost ) {
+  	rainMaker.refresh = 1;
+  }
+  if ( iterations > 3000 && rainMaker.refresh == 1 ) {
+  	displayRainMaker();
+  }
+
+  processA();
+
+started = 1;
+//gameLoop();  // restart the game loop
+
+};
+
+//function fillContainer(container) {
+
+//}
+
+
+</script>
+
+</body>
+</html>

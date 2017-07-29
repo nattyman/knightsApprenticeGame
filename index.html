@@ -1,0 +1,68 @@
+<html>
+<head>
+<style>
+</style>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="pagewrap">
+
+  	<header>
+  		<h1>The Swordsmans Apprentice!</h1>
+  	</header>
+
+  	<section id="content">
+      <div id="messages">
+      <div class="message">Welcome</div>
+    </div>
+  	</section>
+
+  	<section id="middle">
+    <fieldset class="middle-set top-set">
+    		<button id="practiceRiding" class="practiceButton" onclick="practiceSkill('riding','practiceRiding')">Practice Riding</button>
+        <button id="practiceStaff" class="practiceButton" onclick="practiceSkill('staff','practiceStaff')">Practice with Staff</button>
+    </fieldset>
+    <fieldset class="middle-set">
+      <legend>Earn Coin</legend>
+        <button id="gatherWood" class="gatherWoodButton" onclick="earnCoin('gatherWood','gatheringWood')">Gather Wood</button>
+        <button>Run Deliveries</button>
+    </fieldset>
+    <fieldset class="middle-set">
+      <legend>Actions</legend>
+        <button>Build</button>
+        <button>Forge</button>
+        <button>Hunt</button>
+        <button>Explore</button>
+        <button>Quary</button>
+        <button>Quest</button>
+    </fieldset>
+  	</section>
+
+  	<aside id="sidebar">
+      <p>Coins: 0</p>
+<fieldset>
+  <legend>Skills</legend>
+  <p>Riding: <span id="ridingSkillLevel">0</span></p>
+  <p>Staff: <span id="staffSkillLevel">0</span></p>
+  <p>Kife throwing: 0</p>
+</fieldset>
+<fieldset>
+  <legend>Inventory</legend>
+  <p>Knife: 1</p>
+  <p>Staff: 0</p>
+</fieldset>
+  	</aside>
+
+  	<footer>
+  		<p>Copyright 2017</p>
+  		<p>Created by Heath Howard</p>
+  	</footer>
+
+  </div>
+
+
+  <script src="index.js" defer></script>
+
+</body>
+</html>

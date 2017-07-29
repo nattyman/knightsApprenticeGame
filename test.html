@@ -1,0 +1,13 @@
+<script src="index.js"></script>
+<script>
+var tickCount = 1;
+
+function tick1(tickCount) {
+  tickCount++;
+  document.getElementById('tick').innerHTML = `<button id="tickButton" onclick="tick1(${tickCount})">Tick +${tickCount}</button>`
+console.log("tickCount = " + tickCount);
+}
+</script>
+<div id="tick">
+<button id="tickButton" onclick="tick1(tickCount)">Tick +1</button>
+</div>
