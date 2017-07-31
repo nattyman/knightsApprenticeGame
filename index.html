@@ -21,15 +21,19 @@
   	<section id="middle">
     <fieldset class="middle-set top-set">
     		<button id="practiceRiding" class="practiceButton" onclick="practiceSkill('riding','practiceRiding')">Practice Riding</button>
-        <button id="practiceStaff" class="practiceButton" onclick="practiceSkill('staff','practiceStaff')">Practice with Staff</button>
+        <button id="practiceStaff" class="practiceButton hidden" onclick="practiceSkill('staff','practiceStaff')">Practice with Staff</button>
     </fieldset>
+
     <fieldset class="middle-set">
       <legend>Earn Coin</legend>
-        <button id="gatherWood" class="gatherWoodButton" onclick="earnCoin('gatherWood','gatheringWood')">Gather Wood</button>
-        <button>Run Deliveries</button>
+        <button id="gatherWood" class="earnCoin" onclick="earnCoin('gatherWood')">Gather Wood
+        </button>
+        <button id="runDelivery" class="earnCoin hidden" onclick="earnCoin('runDelivery')">Run Deliveries</button>
     </fieldset>
+
     <fieldset class="middle-set">
       <legend>Actions</legend>
+        <button id="shop" class="actions" onclick="shop()">Shop</button>
         <button>Build</button>
         <button>Forge</button>
         <button>Hunt</button>
@@ -40,7 +44,8 @@
   	</section>
 
   	<aside id="sidebar">
-      <p>Coins: 0</p>
+      <div>Coins: <span id="coins">0</span>
+    </div>
 <fieldset>
   <legend>Skills</legend>
   <p>Riding: <span id="ridingSkillLevel">0</span></p>

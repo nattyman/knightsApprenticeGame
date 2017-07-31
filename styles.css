@@ -127,11 +127,11 @@ header, #content, #middle, #sidebar {
 //	border: solid 1px #ccc;
 }
 
-button {
+button, .button{
   border-radius: 5px;
   padding: 2px;
   margin: 0px 2px;
-  width:45%;
+  width:80px;
   height:50px;
   background-color: inherit;
   border-style: solid;
@@ -139,7 +139,7 @@ button {
   border-color: #BBB;
   color:#BBB;
   font-size: 1em;
-  float:left;
+  /*float:left;*/
 }
 
 button:hover {
@@ -152,6 +152,17 @@ button:focus {outline:0;}
 button:disabled {
   background-color: #333;
   color: #AAA;
+}
+
+div.button div.coolDown {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 50%;
+  z-index: -1;
+  background-color: #444;
+  overflow:hidden;
 }
 
 fieldset{
@@ -184,4 +195,8 @@ legend {
 
 .message {
   padding: 3px 0px;
+}
+
+.hidden {
+  visibility: hidden;
 }

@@ -28,7 +28,7 @@
 //       <p>The swordsman has made you his esquire.  If you prove faithful he will someday make you his apprentice.
 //       </p>`
 
-const debug = 0;
+const debug = 1;
 
 // Game Objects //
 
@@ -41,23 +41,41 @@ var skill = { //skill index
 	staff: 0
 }
 var ridingSkills = {
+	// Put all the HTML references in here so that the HTML page can pass one value to the button click function then the function can pull everything it needs from the object.
+	htmlClass: "practiceButton",
+	htmlId: "practiceRiding",
 	skillLevel: 0,
 	practiceMsg: "Practicing riding.",
+	type: "training",
 }
 var staffSkills = {
+	htmlClass: "practiceButton",
+	htmlId: "practiceStaff",
 	skillLevel: 0,
 	practiceMsg: "Practicing with the staff.",
+	type: "training",
+	trustLevel: 2,
 }
 // jobs //
 var gatherWood = {
+	htmlClass: "earnCoin",
+	htmlId: "gatherWood",
+	msg: "Gathering wood.",
 	coinsEarned: 1,
 	difficulty: 1,
-	time: 10
+	time: 10,
+	type: "job",
 }
-var runDeliveries = {
+var runDelivery = {
+	htmlClass: "earnCoin",
+	htmlId: "runDelivery",
+	msg: "Running delivery.",
 	coinsEarned: 2,
 	difficulty: 1,
-	time: 15
+	time: 15,
+	hidden: "no",
+	trustLevel: 3,
+	type: "job",
 }
 // tools //
 var axe = {
@@ -66,11 +84,23 @@ var axe = {
 	timeSaved: 3
 }
 
+// Trust //
+var trust = {
+	training: 0,
+	job: 0,
+}
+
+// Whats Visible //
+// 0 = hidden, 1 = visible //
+var visibility = {
+	staffSkills: 0,
+	runDelivery: 0,
+}
+
 if (debug == 1){
 	console.log("Game Started");
 }
 
-// console.log()
 function practiceSkill(skillPracticed,id) {
 
   skill[skillPracticed]++;
@@ -91,14 +121,126 @@ function practiceSkill(skillPracticed,id) {
 
 }
 
-function earnCoin(job,action){
+function sendMessage(name) {
+	objName = name;
+
+	if (debug == 1){console.log("sendMessage triggered = " + objName);}
+
+	// Prepend new message to message list
+	let msg = document.getElementById("messages").innerHTML;
+	msg = '<div class="message">' + this[objName].msg + "</div>"  + msg;
+	// Write out new message
+	document.getElementById("messages").innerHTML = msg;
+
+}
+
+function changeButtonState(name,state){
+	htmlClass = this[name].htmlClass;
+	let buttonList = document.getElementsByClassName(htmlClass); //get the list of practice buttons by class.
+	// Iterate through the list of buttons and disable them.
+		for (let i = 0; i < buttonList.length; i++){
+			buttonList[i].disabled = state;
+	 }
+}
+
+function buttonCoolDown(name){
+	let countDown = this[name].time;
+	let htmlId = this[name].htmlId;
+
+		function coolDown(countDown,htmlId){
+			// This formula is still wrong. NEEDS WORK
+			let gradient = 100-(countDown/100 * 100);
+			if (debug > 1) {
+				console.log("gradient = " + gradient);
+			}
+			document.getElementById(htmlId).style.background = `linear-gradient(#222 ${gradient}%, #666 100%)`;
+			countDown--;
+			if (debug > 1) {
+				console.log("countdown = " + countDown);
+			}
+			if (countDown > 0){
+				setTimeout(coolDown,100,countDown,htmlId);
+			}
+			else {
+				document.getElementById(htmlId).style.background = "";
+				changeButtonState(name,false);
+				earnTrust(name);
+				// Check to see if anything new should be made visible
+				checkVisibility(name);
+			}
+
+		}
+			coolDown(countDown,htmlId);
+	}
+
+function addMoney(name){
+	coin = coin + this[name].coinsEarned;
+	document.getElementById("coins").innerHTML = coin;
+}
+
+function earnTrust(name){
+	let type = this[name].type;
+	let trustLevel = trust[type];
+	trustLevel++;
+	trust[type] = trustLevel;
+	console.log(`Trust level for ${type} is ${trustLevel}`);
+}
+
+function checkVisibility(name){
+
+	// create array of keys from visibility object
+	let keys = [];
+	for (let key in visibility) {
+		if (visibility.hasOwnProperty(key)) keys.push(key);
+	}
+
+	// iterate over visibility object using the new keys array
+	for (let i=0; i<keys.length; i++) {
+
+		let myObj = keys[i]
+		let type = this[keys[i]].type;
+		let myObjVisibility = visibility[myObj];
+		let htmlId = this[myObj].htmlId;
+
+		if (debug == 1) {
+			console.log("Visibility for " + myObj, myObjVisibility);
+		}
+
+
+		if (this[myObj].trustLevel <= trust[type]){
+			console.log("You are trusted for " + myObj);
+			visibility[myObj] = 1;
+			document.getElementById(htmlId).classList.remove('hidden');
+			//let myClass = document.getElementById(myObj).className;
+			//let myNewClass = myClass.replace("hidden", "");
+		}
+
+
+	}
+}
+
+function earnCoin(job,action,htmlClass){
+	let actionId = action;
+	let name = job;
+
+	if (debug == 1) {
+		console.log(`job = ${job}, action = ${action}, htmlClass = ${htmlClass}`);
+	}
+	// get object
 
 	//disable class
+	changeButtonState(name,true);
+
 	//cooldown button
+	buttonCoolDown(name);
+
+	//add message
+	sendMessage(name);
+
 	//add money
+		addMoney(name);
 		//check for tools
 		//update UI $
-	//enable class
 
 
 
@@ -116,7 +258,7 @@ function coolDownButton(id,coolCount){
 
 		lightBgPercentage = coolCount/20*100;
 		darkBgPercentage = 100 - lightBgPercentage;
-		if (debug == 1) {
+		if (debug == 2) {
 			console.log(`background percentage = ${lightBgPercentage}%`);
 			console.log(`background percentage = ${darkBgPercentage}%`);
 		}
