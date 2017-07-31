@@ -45,14 +45,16 @@ var ridingSkills = {
 	htmlClass: "practiceButton",
 	htmlId: "practiceRiding",
 	skillLevel: 0,
-	practiceMsg: "Practicing riding.",
+	msg: "Practicing riding.",
+	time: 10,
 	type: "training",
 }
 var staffSkills = {
 	htmlClass: "practiceButton",
 	htmlId: "practiceStaff",
 	skillLevel: 0,
-	practiceMsg: "Practicing with the staff.",
+	msg: "Practicing with the staff.",
+	time: 10,
 	type: "training",
 	trustLevel: 2,
 }
@@ -73,7 +75,6 @@ var runDelivery = {
 	coinsEarned: 2,
 	difficulty: 1,
 	time: 15,
-	hidden: "no",
 	trustLevel: 3,
 	type: "job",
 }
@@ -101,7 +102,7 @@ if (debug == 1){
 	console.log("Game Started");
 }
 
-function practiceSkill(skillPracticed,id) {
+function practiceSkillNOTUSED(skillPracticed,id) {
 
   skill[skillPracticed]++;
 	console.log("Inside Test");
@@ -178,6 +179,17 @@ function addMoney(name){
 	document.getElementById("coins").innerHTML = coin;
 }
 
+function incrementSkill(name) {
+	//update the skill level in the object
+	let skillLevel = this[name].skillLevel;
+	skillLevel++;
+	this[name].skillLevel = skillLevel;
+
+	// update the skill level in the UI
+	let skillId = name + 'Level';
+	document.getElementById(skillId).innerHTML = skillLevel;
+}
+
 function earnTrust(name){
 	let type = this[name].type;
 	let trustLevel = trust[type];
@@ -219,12 +231,12 @@ function checkVisibility(name){
 	}
 }
 
-function earnCoin(job,action,htmlClass){
+function earnCoin(name,action,htmlClass){
 	let actionId = action;
-	let name = job;
+	// let name = job;
 
 	if (debug == 1) {
-		console.log(`job = ${job}, action = ${action}, htmlClass = ${htmlClass}`);
+		console.log(`name = ${name}, action = ${action}, htmlClass = ${htmlClass}`);
 	}
 	// get object
 
@@ -238,15 +250,20 @@ function earnCoin(job,action,htmlClass){
 	sendMessage(name);
 
 	//add money
+	if (this[name].type == "job"){
 		addMoney(name);
+	}
 		//check for tools
 		//update UI $
 
-
+	//increment skill level
+if (this[name].type == "training"){
+	incrementSkill(name);
+}
 
 }
 
-function coolDownButton(id,coolCount){
+function coolDownButtonNOTUSED(id,coolCount){
 
 	if (coolCount < 20) { //  Countdown for the cooldown
 
