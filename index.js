@@ -102,26 +102,6 @@ if (debug == 1){
 	console.log("Game Started");
 }
 
-function practiceSkillNOTUSED(skillPracticed,id) {
-
-  skill[skillPracticed]++;
-	console.log("Inside Test");
-  console.log(`${skillPracticed} skill now = ${skill[skillPracticed]}`);
-	let buttonId = id;
-	let coolCount = 0;
-	coolDownButton(buttonId,coolCount);
-	document.getElementById(`${skillPracticed}SkillLevel`).innerHTML = `${skill[skillPracticed]}`
-	// send message
-	  //construct object name
-		let objName = skillPracticed + "Skills";
-		console.log("objName = " + objName);
-	let msg = document.getElementById("messages").innerHTML;
-	msg = '<div class="message">' + this[objName].practiceMsg + "</div>"  + msg;
-	console.log("msg = " + msg);
-	document.getElementById("messages").innerHTML = msg;
-
-}
-
 function sendMessage(name) {
 	objName = name;
 
@@ -257,47 +237,8 @@ function earnCoin(name,action,htmlClass){
 		//update UI $
 
 	//increment skill level
-if (this[name].type == "training"){
-	incrementSkill(name);
-}
-
-}
-
-function coolDownButtonNOTUSED(id,coolCount){
-
-	if (coolCount < 20) { //  Countdown for the cooldown
-
-		let buttonList = document.getElementsByClassName("practiceButton") // get the list of practice buttons by class.
-		// Iterate through the list of buttons and disable them.
-		for (let i = 0; i < buttonList.length; i++){
-			buttonList[i].disabled = true;
-		}
-
-		lightBgPercentage = coolCount/20*100;
-		darkBgPercentage = 100 - lightBgPercentage;
-		if (debug == 2) {
-			console.log(`background percentage = ${lightBgPercentage}%`);
-			console.log(`background percentage = ${darkBgPercentage}%`);
-		}
-		document.getElementById(id).style.background = `linear-gradient(#222 ${lightBgPercentage}%,#444)`;
-
-		// Increment the cool down count
-		coolCount++;
-
-		setTimeout(coolDownButton,50,id,coolCount)
-	}
-	else { // reset everything after the cooldown.
-		document.getElementById(id).disabled = false;
-		document.getElementById(id).style.background = ""; // set the bg, including the hover, back to the original stylesheet attributes.
-
-		// Enable buttons. //
-		// get the list of practice buttons by class.
-		let buttonList = document.getElementsByClassName("practiceButton")
-		// Iterate through the list of buttons and enable them.
-		for (let i = 0; i < buttonList.length; i++){
-			buttonList[i].disabled = false;
-			buttonList[i].style.hover = "color:blue";
-		}
+	if (this[name].type == "training"){
+		incrementSkill(name);
 	}
 
 }
