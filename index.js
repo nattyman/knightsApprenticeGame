@@ -32,21 +32,32 @@ const debug = 1;
 
 // Game Objects //
 
-
 var coin = 0;
+
+// Inventory //
+var inventory = {
+	axe: 0,
+	staff: 0,
+	knife: 0,
+	recurveBow: 0,
+	longBow: 0,
+	pony: 0,
+	horse: 0,
+}
 
 // skills //
 var skill = { //skill index
 	riding: 0,
 	staff: 0
 }
+
 var ridingSkills = {
 	// Put all the HTML references in here so that the HTML page can pass one value to the button click function then the function can pull everything it needs from the object.
 	htmlClass: "practiceButton",
 	htmlId: "practiceRiding",
 	skillLevel: 0,
 	msg: "Practicing riding.",
-	time: 10,
+	time: 100,
 	type: "training",
 }
 var staffSkills = {
@@ -54,7 +65,7 @@ var staffSkills = {
 	htmlId: "practiceStaff",
 	skillLevel: 0,
 	msg: "Practicing with the staff.",
-	time: 10,
+	time: 100,
 	type: "training",
 	trustLevel: 2,
 }
@@ -65,7 +76,7 @@ var gatherWood = {
 	msg: "Gathering wood.",
 	coinsEarned: 1,
 	difficulty: 1,
-	time: 10,
+	time: 100,
 	type: "job",
 }
 var runDelivery = {
@@ -74,15 +85,37 @@ var runDelivery = {
 	msg: "Running delivery.",
 	coinsEarned: 2,
 	difficulty: 1,
-	time: 15,
+	time: 150,
 	trustLevel: 3,
 	type: "job",
 }
+
+// actions //
+var shop = {
+	htmlClass: "actions",
+	htmlId: "shop",
+	trustLevel: 1,
+	type: "job",
+
+}
 // tools //
 var axe = {
-	cost: 10,
+	msg: "The axe makes gathering wood a lot easier!",
+	cost: 2,
 	bonusCoins: 1,
 	timeSaved: 3
+}
+
+// Weapons //
+var staff = {
+	msg: "The staff is a good starter weopon to learn balance and control.",
+	cost: 20,
+	damage: 1,
+}
+var knife = {
+	msg: "The knife is a handy tool that can double as a weopon",
+	cost: 25,
+	damage: 1,
 }
 
 // Trust //
@@ -96,6 +129,7 @@ var trust = {
 var visibility = {
 	staffSkills: 0,
 	runDelivery: 0,
+	shop: 0,
 }
 
 if (debug == 1){
@@ -128,19 +162,23 @@ function buttonCoolDown(name){
 	let countDown = this[name].time;
 	let htmlId = this[name].htmlId;
 
+	// document.getElementById(htmlId).style.background = `linear-gradient(#666 100%)`;
+	let gradient = -20;
+
+
 		function coolDown(countDown,htmlId){
 			// This formula is still wrong. NEEDS WORK
-			let gradient = 100-(countDown/100 * 100);
+			gradient++;
 			if (debug > 1) {
 				console.log("gradient = " + gradient);
 			}
-			document.getElementById(htmlId).style.background = `linear-gradient(#222 ${gradient}%, #666 100%)`;
+			document.getElementById(htmlId).style.background = `linear-gradient(#222 ${gradient}%, #666 99%, #666 100%, #666 100%, #666 100%)`;
 			countDown--;
 			if (debug > 1) {
 				console.log("countdown = " + countDown);
 			}
 			if (countDown > 0){
-				setTimeout(coolDown,100,countDown,htmlId);
+				setTimeout(coolDown,10,countDown,htmlId);
 			}
 			else {
 				document.getElementById(htmlId).style.background = "";
@@ -178,6 +216,10 @@ function earnTrust(name){
 	console.log(`Trust level for ${type} is ${trustLevel}`);
 }
 
+function writeInventory(){
+
+}
+
 function checkVisibility(name){
 
 	// create array of keys from visibility object
@@ -198,7 +240,7 @@ function checkVisibility(name){
 			console.log("Visibility for " + myObj, myObjVisibility);
 		}
 
-
+		// Unhide any buttons based on the trust level
 		if (this[myObj].trustLevel <= trust[type]){
 			console.log("You are trusted for " + myObj);
 			visibility[myObj] = 1;
@@ -239,6 +281,20 @@ function earnCoin(name,action,htmlClass){
 	//increment skill level
 	if (this[name].type == "training"){
 		incrementSkill(name);
+	}
+} //end earnCoin
+
+// Purchase items //
+function purchase(item){
+	let newItem = item;
+	// Is there enough coin
+	if (this[newItem].cost <= coin) {
+		console.log("Yes you can buy this");
+		inventory[item]++;
+		coin = coin - this[newItem].cost;
+		document.getElementById("coins").innerHTML = coin;
+		console.log(`${item} = ${inventory[item]}`);
+		write(inventory);
 	}
 
 }
