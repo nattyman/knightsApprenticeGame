@@ -218,7 +218,28 @@ function earnTrust(name){
 
 function writeInventory(){
 
-}
+// create array of inventory Objects
+ let keys = [];
+ for (let key in inventory){
+	 if (inventory.hasOwnProperty(key)) keys.push(key);
+ }
+
+	// create html for inventory to insert on the page
+ let inventoryHtml = "";
+
+ // iterate over inventory object using the new keys array to build the inventory html
+ for (let i=0; i<keys.length; i++){
+ 	let myObj = keys[i];
+		// Don't show empty inventory
+		if (inventory[myObj] > 0){
+			inventoryHtml += `<div id="${myObj}" class="inventory">${myObj}: <span id="${myObj}Count">${inventory[myObj]}</span></div>`
+		}
+	// console.log(inventoryHtml);
+ }
+ // write out the updated inventory
+ document.getElementById("inventory").innerHTML = inventoryHtml;
+
+} // End writeInventory
 
 function checkVisibility(name){
 
@@ -294,7 +315,7 @@ function purchase(item){
 		coin = coin - this[newItem].cost;
 		document.getElementById("coins").innerHTML = coin;
 		console.log(`${item} = ${inventory[item]}`);
-		write(inventory);
+		writeInventory();
 	}
 
 }
