@@ -36,286 +36,326 @@ var coin = 0;
 
 // Inventory //
 var inventory = {
-	axe: 0,
-	staff: 0,
-	knife: 0,
-	recurveBow: 0,
-	longBow: 0,
-	pony: 0,
-	horse: 0,
+  axe: 0,
+  staff: 0,
+  knife: 0,
+  recurveBow: 0,
+  longBow: 0,
+  pony: 0,
+  horse: 0,
 }
 
 // skills //
 var skill = { //skill index
-	riding: 0,
-	staff: 0
+  riding: 0,
+  staff: 0,
+  knife: 0,
+  bow: 0,
+  sword: 0,
 }
 
 var ridingSkills = {
-	// Put all the HTML references in here so that the HTML page can pass one value to the button click function then the function can pull everything it needs from the object.
-	htmlClass: "practiceButton",
-	htmlId: "practiceRiding",
-	skillLevel: 0,
-	msg: "Practicing riding.",
-	time: 100,
-	type: "training",
+  // Put all the HTML references in here so that the HTML page can pass one value to the button click function then the function can pull everything it needs from the object.
+  name: "riding",
+  htmlClass: "practiceButton",
+  htmlId: "practiceRiding",
+  skillLevel: 0,
+  msg: "Practicing riding.",
+  time: 100,
+  type: "training",
 }
 var staffSkills = {
-	htmlClass: "practiceButton",
-	htmlId: "practiceStaff",
-	skillLevel: 0,
-	msg: "Practicing with the staff.",
-	time: 100,
-	type: "training",
-	trustLevel: 2,
+  name: "staff",
+  htmlClass: "practiceButton",
+  htmlId: "practiceStaff",
+  skillLevel: 0,
+  msg: "Practicing with the staff.",
+  time: 100,
+  type: "training",
+  trustLevel: 2,
 }
 // jobs //
 var gatherWood = {
-	htmlClass: "earnCoin",
-	htmlId: "gatherWood",
-	msg: "Gathering wood.",
-	coinsEarned: 1,
-	difficulty: 1,
-	time: 100,
-	type: "job",
+  htmlClass: "earnCoin",
+  htmlId: "gatherWood",
+  msg: "Gathering wood.",
+  coinsEarned: 1,
+  difficulty: 1,
+  time: 100,
+  type: "job",
 }
 var runDelivery = {
-	htmlClass: "earnCoin",
-	htmlId: "runDelivery",
-	msg: "Running delivery.",
-	coinsEarned: 2,
-	difficulty: 1,
-	time: 150,
-	trustLevel: 3,
-	type: "job",
+  htmlClass: "earnCoin",
+  htmlId: "runDelivery",
+  msg: "Running delivery.",
+  coinsEarned: 2,
+  difficulty: 1,
+  time: 150,
+  trustLevel: 3,
+  type: "job",
 }
 
 // actions //
 var shop = {
-	htmlClass: "actions",
-	htmlId: "shop",
-	trustLevel: 1,
-	type: "job",
+  htmlClass: "actions",
+  htmlId: "shop",
+  trustLevel: 1,
+  type: "job",
 
 }
 // tools //
 var axe = {
-	msg: "The axe makes gathering wood a lot easier!",
-	cost: 2,
-	bonusCoins: 1,
-	timeSaved: 3
+  msg: "The axe makes gathering wood a lot easier!",
+  cost: 2,
+  bonusCoins: 1,
+  timeSaved: 3
 }
 
 // Weapons //
 var staff = {
-	msg: "The staff is a good starter weopon to learn balance and control.",
-	cost: 20,
-	damage: 1,
+  msg: "The staff is a good starter weopon to learn balance and control.",
+  cost: 20,
+  damage: 1,
 }
 var knife = {
-	msg: "The knife is a handy tool that can double as a weopon",
-	cost: 25,
-	damage: 1,
+  msg: "The knife is a handy tool that can double as a weopon",
+  cost: 25,
+  damage: 1,
 }
 
 // Trust //
 var trust = {
-	training: 0,
-	job: 0,
+  training: 0,
+  job: 0,
 }
 
 // Whats Visible //
 // 0 = hidden, 1 = visible //
 var visibility = {
-	staffSkills: 0,
-	runDelivery: 0,
-	shop: 0,
+  staffSkills: 0,
+  runDelivery: 0,
+  shop: 0,
 }
 
-if (debug == 1){
-	console.log("Game Started");
+if (debug == 1) {
+  console.log("Game Started");
 }
 
 function sendMessage(name) {
-	objName = name;
+  objName = name;
 
-	if (debug == 1){console.log("sendMessage triggered = " + objName);}
+  if (debug == 1) {
+    console.log("sendMessage triggered = " + objName);
+  }
 
-	// Prepend new message to message list
-	let msg = document.getElementById("messages").innerHTML;
-	msg = '<div class="message">' + this[objName].msg + "</div>"  + msg;
-	// Write out new message
-	document.getElementById("messages").innerHTML = msg;
+  // Prepend new message to message list
+  let msg = document.getElementById("messages").innerHTML;
+  msg = '<div class="message">' + this[objName].msg + "</div>" + msg;
+  // Write out new message
+  document.getElementById("messages").innerHTML = msg;
 
 }
 
-function changeButtonState(name,state){
-	htmlClass = this[name].htmlClass;
-	let buttonList = document.getElementsByClassName(htmlClass); //get the list of practice buttons by class.
-	// Iterate through the list of buttons and disable them.
-		for (let i = 0; i < buttonList.length; i++){
-			buttonList[i].disabled = state;
-	 }
+function changeButtonState(name, state) {
+  htmlClass = this[name].htmlClass;
+  let buttonList = document.getElementsByClassName(htmlClass); //get the list of practice buttons by class.
+  // Iterate through the list of buttons and disable them.
+  for (let i = 0; i < buttonList.length; i++) {
+    buttonList[i].disabled = state;
+  }
 }
 
-function buttonCoolDown(name){
-	let countDown = this[name].time;
-	let htmlId = this[name].htmlId;
+function buttonCoolDown(name) {
+  let countDown = this[name].time;
+  let htmlId = this[name].htmlId;
 
-	// document.getElementById(htmlId).style.background = `linear-gradient(#666 100%)`;
-	let gradient = -20;
+  // document.getElementById(htmlId).style.background = `linear-gradient(#666 100%)`;
+  let gradient = -20;
 
 
-		function coolDown(countDown,htmlId){
-			// This formula is still wrong. NEEDS WORK
-			gradient++;
-			if (debug > 1) {
-				console.log("gradient = " + gradient);
-			}
-			document.getElementById(htmlId).style.background = `linear-gradient(#222 ${gradient}%, #666 99%, #666 100%, #666 100%, #666 100%)`;
-			countDown--;
-			if (debug > 1) {
-				console.log("countdown = " + countDown);
-			}
-			if (countDown > 0){
-				setTimeout(coolDown,10,countDown,htmlId);
-			}
-			else {
-				document.getElementById(htmlId).style.background = "";
-				changeButtonState(name,false);
-				earnTrust(name);
-				// Check to see if anything new should be made visible
-				checkVisibility(name);
-			}
+  function coolDown(countDown, htmlId) {
+    // This formula is still wrong. NEEDS WORK
+    gradient++;
+    if (debug > 1) {
+      console.log("gradient = " + gradient);
+    }
+    document.getElementById(htmlId).style.background = `linear-gradient(#222 ${gradient}%, #666 99%, #666 100%, #666 100%, #666 100%)`;
+    countDown--;
+    if (debug > 1) {
+      console.log("countdown = " + countDown);
+    }
+    if (countDown > 0) {
+      setTimeout(coolDown, 10, countDown, htmlId);
+    } else {
+      document.getElementById(htmlId).style.background = "";
+      changeButtonState(name, false);
+      earnTrust(name);
+      // Check to see if anything new should be made visible
+      checkVisibility(name);
+    }
 
-		}
-			coolDown(countDown,htmlId);
-	}
+  }
+  coolDown(countDown, htmlId);
+}
 
-function addMoney(name){
-	coin = coin + this[name].coinsEarned;
-	document.getElementById("coins").innerHTML = coin;
+function addMoney(name) {
+  coin = coin + this[name].coinsEarned;
+  document.getElementById("coins").innerHTML = coin;
 }
 
 function incrementSkill(name) {
-	//update the skill level in the object
-	let skillLevel = this[name].skillLevel;
-	skillLevel++;
-	this[name].skillLevel = skillLevel;
+  //update the skill level in the object
+  // New skill level logic //
+  let skillName = this[name].name;
+  let skillLevel = skill[skillName];
+  skillLevel++;
+  skill[skillName] = skillLevel;
 
-	// update the skill level in the UI
-	let skillId = name + 'Level';
-	document.getElementById(skillId).innerHTML = skillLevel;
+  let keys = getKeys("skill");
+
+  // create html for inventory to insert on the page
+  let skillHtml = "";
+
+  // iterate over inventory object using the new keys array to build the inventory html
+  for (let i = 0; i < keys.length; i++) {
+    let myObj = keys[i];
+    // Don't show empty inventory
+    if (skill[myObj] > 0) {
+      skillHtml += `<div id="${myObj}" class="skillLevel">${myObj}: <span id="${myObj}Count">${skill[myObj]}</span></div>`
+    }
+    console.log(skillHtml);
+  }
+  // write out the updated inventory
+  document.getElementById("skillLevels").innerHTML = skillHtml;
+
+
+  // update the skill level in the UI
+  // let skillId = name + 'Level';
+  // document.getElementById(skillId).innerHTML = skillLevel;
+
 }
 
-function earnTrust(name){
-	let type = this[name].type;
-	let trustLevel = trust[type];
-	trustLevel++;
-	trust[type] = trustLevel;
-	console.log(`Trust level for ${type} is ${trustLevel}`);
+// Get keys from object and put them into an array
+function getKeys(obj) {
+  let keys = [];
+  for (let key in this[obj]) {
+    if (this[obj].hasOwnProperty(key)) keys.push(key);
+    console.log(`inventory key = ${key}`);
+  }
+  return keys;
 }
 
-function writeInventory(){
+function earnTrust(name) {
+  let type = this[name].type;
+  let trustLevel = trust[type];
+  trustLevel++;
+  trust[type] = trustLevel;
+  console.log(`Trust level for ${type} is ${trustLevel}`);
+}
 
-// create array of inventory Objects
- let keys = [];
- for (let key in inventory){
-	 if (inventory.hasOwnProperty(key)) keys.push(key);
- }
+function writeInventory() {
 
-	// create html for inventory to insert on the page
- let inventoryHtml = "";
+  // create array of inventory Objects
+  let keys = getKeys("inventory");
+  console.log(`keys array = ${keys}`);
+  // let keys = [];
+  // for (let key in inventory){
+  //  if (inventory.hasOwnProperty(key)) keys.push(key);
+  // console.log(`inventory key = ${key}`);
+  // }
 
- // iterate over inventory object using the new keys array to build the inventory html
- for (let i=0; i<keys.length; i++){
- 	let myObj = keys[i];
-		// Don't show empty inventory
-		if (inventory[myObj] > 0){
-			inventoryHtml += `<div id="${myObj}" class="inventory">${myObj}: <span id="${myObj}Count">${inventory[myObj]}</span></div>`
-		}
-	// console.log(inventoryHtml);
- }
- // write out the updated inventory
- document.getElementById("inventory").innerHTML = inventoryHtml;
+  // create html for inventory to insert on the page
+  let inventoryHtml = "";
+
+  // iterate over inventory object using the new keys array to build the inventory html
+  for (let i = 0; i < keys.length; i++) {
+    let myObj = keys[i];
+    // Don't show empty inventory
+    if (inventory[myObj] > 0) {
+      inventoryHtml += `<div id="${myObj}" class="inventory">${myObj}: <span id="${myObj}Count">${inventory[myObj]}</span></div>`
+    }
+    // console.log(inventoryHtml);
+  }
+  // write out the updated inventory
+  document.getElementById("inventory").innerHTML = inventoryHtml;
 
 } // End writeInventory
 
-function checkVisibility(name){
+function checkVisibility(name) {
 
-	// create array of keys from visibility object
-	let keys = [];
-	for (let key in visibility) {
-		if (visibility.hasOwnProperty(key)) keys.push(key);
-	}
+  // create array of keys from visibility object
+  let keys = [];
+  for (let key in visibility) {
+    if (visibility.hasOwnProperty(key)) keys.push(key);
+  }
 
-	// iterate over visibility object using the new keys array
-	for (let i=0; i<keys.length; i++) {
+  // iterate over visibility object using the new keys array
+  for (let i = 0; i < keys.length; i++) {
 
-		let myObj = keys[i]
-		let type = this[keys[i]].type;
-		let myObjVisibility = visibility[myObj];
-		let htmlId = this[myObj].htmlId;
+    let myObj = keys[i]
+    let type = this[keys[i]].type;
+    let myObjVisibility = visibility[myObj];
+    let htmlId = this[myObj].htmlId;
 
-		if (debug == 1) {
-			console.log("Visibility for " + myObj, myObjVisibility);
-		}
+    if (debug == 1) {
+      console.log("Visibility for " + myObj, myObjVisibility);
+    }
 
-		// Unhide any buttons based on the trust level
-		if (this[myObj].trustLevel <= trust[type]){
-			console.log("You are trusted for " + myObj);
-			visibility[myObj] = 1;
-			document.getElementById(htmlId).classList.remove('hidden');
-			//let myClass = document.getElementById(myObj).className;
-			//let myNewClass = myClass.replace("hidden", "");
-		}
+    // Unhide any buttons based on the trust level
+    if (this[myObj].trustLevel <= trust[type]) {
+      console.log("You are trusted for " + myObj);
+      visibility[myObj] = 1;
+      document.getElementById(htmlId).classList.remove('hidden');
+      //let myClass = document.getElementById(myObj).className;
+      //let myNewClass = myClass.replace("hidden", "");
+    }
 
 
-	}
+  }
 }
 
-function earnCoin(name,action,htmlClass){
-	let actionId = action;
-	// let name = job;
+function earnCoin(name, action, htmlClass) {
+  let actionId = action;
+  // let name = job;
 
-	if (debug == 1) {
-		console.log(`name = ${name}, action = ${action}, htmlClass = ${htmlClass}`);
-	}
-	// get object
+  if (debug == 1) {
+    console.log(`name = ${name}, action = ${action}, htmlClass = ${htmlClass}`);
+  }
+  // get object
 
-	//disable class
-	changeButtonState(name,true);
+  //disable class
+  changeButtonState(name, true);
 
-	//cooldown button
-	buttonCoolDown(name);
+  //cooldown button
+  buttonCoolDown(name);
 
-	//add message
-	sendMessage(name);
+  //add message
+  sendMessage(name);
 
-	//add money
-	if (this[name].type == "job"){
-		addMoney(name);
-	}
-		//check for tools
-		//update UI $
+  //add money
+  if (this[name].type == "job") {
+    addMoney(name);
+  }
+  //check for tools
+  //update UI $
 
-	//increment skill level
-	if (this[name].type == "training"){
-		incrementSkill(name);
-	}
+  //increment skill level
+  if (this[name].type == "training") {
+    incrementSkill(name);
+  }
 } //end earnCoin
 
 // Purchase items //
-function purchase(item){
-	let newItem = item;
-	// Is there enough coin
-	if (this[newItem].cost <= coin) {
-		console.log("Yes you can buy this");
-		inventory[item]++;
-		coin = coin - this[newItem].cost;
-		document.getElementById("coins").innerHTML = coin;
-		console.log(`${item} = ${inventory[item]}`);
-		writeInventory();
-	}
+function purchase(item) {
+  let newItem = item;
+  // Is there enough coin
+  if (this[newItem].cost <= coin) {
+    console.log("Yes you can buy this");
+    inventory[item]++;
+    coin = coin - this[newItem].cost;
+    document.getElementById("coins").innerHTML = coin;
+    console.log(`${item} = ${inventory[item]}`);
+    writeInventory();
+  }
 
 }

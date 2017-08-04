@@ -34,12 +34,12 @@
     <fieldset class="middle-set">
       <legend>Actions</legend>
         <a href="#openShop"><button id="shop" class="actions hidden" a >Shop</button></a>
-        <button>Build</button>
-        <button>Forge</button>
-        <button>Hunt</button>
-        <button>Explore</button>
-        <button>Quary</button>
-        <button>Quest</button>
+        <button class="actions hidden">Build</button>
+        <button class="actions hidden">Forge</button>
+        <button class="actions hidden">Hunt</button>
+        <button class="actions hidden">Explore</button>
+        <button class="actions hidden">Quary</button>
+        <button class="actions hidden">Quest</button>
     </fieldset>
   	</section>
 
@@ -48,15 +48,17 @@
     </div>
 <fieldset>
   <legend>Skills</legend>
-  <p>Riding: <span id="ridingSkillsLevel">0</span></p>
-  <p>Staff: <span id="staffSkillsLevel">0</span></p>
-  <p>Kife throwing: 0</p>
+  <div id="skillLevels">
+    <!-- <p>Riding: <span id="ridingSkillsLevel">0</span></p>
+    <p>Staff: <span id="staffSkillsLevel">0</span></p>
+    <p>Kife throwing: 0</p> -->
+  </div>
 </fieldset>
 <fieldset>
   <legend>Inventory</legend>
   <div id="inventory">
-    <div id="knife" class="inventoryItem">Knife: <span id="knifeCount">0</span></div>
-    <div id="staff" class="inventoryItem">Staff: <span id="knifeCount">0</span></div>
+    <!-- <div id="knife" class="inventoryItem">Knife: <span id="knifeCount">0</span></div>
+    <div id="staff" class="inventoryItem">Staff: <span id="knifeCount">0</span></div> -->
   </div>
 </fieldset>
   	</aside>
@@ -75,7 +77,7 @@
 		<p>What would you like to purchase</p>
     <fieldset>
       <legend>Tools</legend>
-        <button id="axe" class="shop" onclick="purchase('axe')">Wood Axe</button>
+        <button id="axe" class="shop" onclick="purchase('axe'),location.href='#close'">Wood Axe</button>
 </fieldset>
 <fieldset>
   <legend>Weopons</legend>
