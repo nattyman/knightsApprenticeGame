@@ -20,26 +20,26 @@
 
   	<section id="middle">
     <fieldset class="middle-set top-set">
-    		<button id="practiceRiding" class="practiceButton" onclick="earnCoin('ridingSkills','practiceRiding')">Practice Riding</button>
-        <button id="practiceStaff" class="practiceButton hidden" onclick="earnCoin('staffSkills','practiceStaff')">Practice with Staff</button>
+    		<div id="practiceRiding" class="button practicediv" onclick="earnCoin('ridingSkills','practiceRiding')">Practice Riding</div>
+        <div id="practiceStaff" class="button practicediv hidden" onclick="earnCoin('staffSkills','practiceStaff')">Practice with Staff</div>
     </fieldset>
 
     <fieldset class="middle-set">
       <legend>Earn Coin</legend>
-        <button id="gatherWood" class="earnCoin" onclick="earnCoin('gatherWood')">Gather Wood
-        </button>
-        <button id="runDelivery" class="earnCoin hidden" onclick="earnCoin('runDelivery')">Run Deliveries</button>
+        <div id="gatherWood" class="button earnCoin tooltip" onclick="earnCoin('gatherWood')">Gather Wood<span id='gatheringWoodPay' class="tooltiptext">+1 coin</span>
+        </div>
+        <div id="runDelivery" class="button earnCoin tooltip hidden" onclick="earnCoin('runDelivery')">Run Deliveries<span id='deliveryPay' class="tooltiptext">+2 coin</span></div>
     </fieldset>
 
     <fieldset class="middle-set">
       <legend>Actions</legend>
-        <a href="#openShop"><button id="shop" class="actions hidden" a >Shop</button></a>
-        <button class="actions hidden">Build</button>
-        <button class="actions hidden">Forge</button>
-        <button class="actions hidden">Hunt</button>
-        <button class="actions hidden">Explore</button>
-        <button class="actions hidden">Quary</button>
-        <button class="actions hidden">Quest</button>
+        <a href="#openShop"><div id="shop" class="button actions hidden" onclick="sendShopMessage('What would you like to purchase?')" >Shop</div></a>
+        <div class="button actions hidden">Build</div>
+        <div class="button actions hidden">Forge</div>
+        <div class="button actions hidden">Hunt</div>
+        <div class="button actions hidden">Explore</div>
+        <div class="button actions hidden">Quary</div>
+        <div class="button actions hidden">Quest</div>
     </fieldset>
   	</section>
 
@@ -74,14 +74,14 @@
 	<div>
 		<a href="#close" title="Close" class="close">X</a>
 		<h2>Welcome to my shop!</h2>
-		<p>What would you like to purchase</p>
+		<p id="shopMsg">What would you like to purchase</p>
     <fieldset>
       <legend>Tools</legend>
-        <button id="axe" class="shop" onclick="purchase('axe'),location.href='#close'">Wood Axe</button>
+        <div id="axe" class="button shop" onclick="purchase('axe')">Wood Axe</div>
 </fieldset>
 <fieldset>
   <legend>Weopons</legend>
-  <button id="staff" class="shop" onclick="purchase('staff')">Wood Staff</button>
+  <div id="staff" class="button shop" onclick="purchase('staff')">Wood Staff</div>
 	</div>
 </div>
 

@@ -27,6 +27,12 @@
 //
 //       <p>The swordsman has made you his esquire.  If you prove faithful he will someday make you his apprentice.
 //       </p>`
+//
+//  To Do
+//  -Create shop buttons from objects
+//  -Add prices to shop items
+//  -Add message for purchasing
+//  -Add "you don't have enough money message"
 
 const debug = 1;
 
@@ -59,8 +65,8 @@ var ridingSkills = {
   name: "riding",
   htmlClass: "practiceButton",
   htmlId: "practiceRiding",
-  skillLevel: 0,
   msg: "Practicing riding.",
+  shopMsg: "You bought an axe. Careful not to chop your foot off.",
   time: 100,
   type: "training",
 }
@@ -68,7 +74,6 @@ var staffSkills = {
   name: "staff",
   htmlClass: "practiceButton",
   htmlId: "practiceStaff",
-  skillLevel: 0,
   msg: "Practicing with the staff.",
   time: 100,
   type: "training",
@@ -111,15 +116,22 @@ var axe = {
   timeSaved: 3
 }
 
+var cart = {
+  msg: "With a cart you can haul more things faster.",
+  cost: 3,
+  bonusCoins: 2,
+  timeSaved: 5,
+}
+
 // Weapons //
 var staff = {
   msg: "The staff is a good starter weopon to learn balance and control.",
-  cost: 20,
+  cost: 3,
   damage: 1,
 }
 var knife = {
   msg: "The knife is a handy tool that can double as a weopon",
-  cost: 25,
+  cost: 5,
   damage: 1,
 }
 
@@ -135,6 +147,14 @@ var visibility = {
   staffSkills: 0,
   runDelivery: 0,
   shop: 0,
+}
+
+// Shop buttons //
+var shopButtons = {
+  axe: 1,
+  cart: 0,
+  staff: 0,
+  knife: 0,
 }
 
 if (debug == 1) {
@@ -314,6 +334,12 @@ function checkVisibility(name) {
   }
 }
 
+// Send message in the shop
+function sendShopMessage(msg) {
+  document.getElementById('shopMsg').innerHTML = msg;
+}
+
+
 function earnCoin(name, action, htmlClass) {
   let actionId = action;
   // let name = job;
@@ -356,6 +382,9 @@ function purchase(item) {
     document.getElementById("coins").innerHTML = coin;
     console.log(`${item} = ${inventory[item]}`);
     writeInventory();
+    sendShopMessage(`You purchased a ${item}`)
+  } else {
+    sendShopMessage("You don't have enough money for that.")
   }
 
 }
