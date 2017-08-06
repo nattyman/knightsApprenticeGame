@@ -33,7 +33,7 @@
 
     <fieldset class="middle-set">
       <legend>Actions</legend>
-        <a href="#openShop"><div id="shop" class="button actions hidden" onclick="sendShopMessage('What would you like to purchase?')" >Shop</div></a>
+        <a href="#openShop"><div id="shop" class="button actions hidden" onclick="buildShop()" >Shop</div></a>
         <div class="button actions hidden">Build</div>
         <div class="button actions hidden">Forge</div>
         <div class="button actions hidden">Hunt</div>
@@ -71,21 +71,24 @@
   </div>
 
   <div id="openShop" class="modalDialog">
-	<div>
-		<a href="#close" title="Close" class="close">X</a>
-		<h2>Welcome to my shop!</h2>
-		<p id="shopMsg">What would you like to purchase</p>
+    <div>
+  	<a href="#close" title="Close" class="close">X</a>
+  	<h2>Welcome to my shop!</h2>
+  	<p id="shopMsg">What would you like to purchase</p>
     <fieldset>
       <legend>Tools</legend>
+      <div id="shopTools">
         <div id="axe" class="button shop" onclick="purchase('axe')">Wooden Axe</div>
         <div id="cart" class="button shop" onclick="purchase('cart')">Wooden Cart</div>
-
-</fieldset>
-<fieldset>
-  <legend>Weopons</legend>
-  <div id="staff" class="button shop" onclick="purchase('staff')">Wood Staff</div>
-	</div>
-</div>
+      </div>
+  </fieldset>
+  <fieldset>
+    <legend>Weopons</legend>
+    <div id="shopWeapons">
+      <div id="staff" class="button shop" onclick="purchase('staff')">Wood Staff</div>
+  	</div>
+  </div>
+  </div>
 
 
   <script src="index.js" defer></script>

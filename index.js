@@ -31,8 +31,8 @@
 //  To Do
 //  -Create shop buttons from objects
 //  -Add prices to shop items
-//  -Add message for purchasing
-//  -Add "you don't have enough money message"
+//  X-Add message for purchasing
+//  X-Add "you don't have enough money message"
 
 const debug = 1;
 
@@ -45,11 +45,12 @@ var inventory = {
   axe: 0,
   cart: 0,
   staff: 0,
-  // knife: 0,
-  // recurveBow: 0,
-  // longBow: 0,
-  // pony: 0,
-  // horse: 0,
+  knife: 0,
+  sling: 0,
+  recurveBow: 0,
+  longBow: 0,
+  pony: 0,
+  horse: 0,
 }
 
 // skills //
@@ -114,6 +115,9 @@ var shop = {
 }
 // tools //
 var axe = {
+  name: "Wooden Axe",
+  id: "axe",
+  type: "tool",
   msg: "The axe makes gathering wood a lot easier!",
   cost: 2,
   bonusCoins: 1,
@@ -122,7 +126,10 @@ var axe = {
 }
 
 var cart = {
-  msg: "With a cart you can haul more things faster.",
+  name: "Wooden Cart",
+  id: "cart",
+  type: "tool",
+  msg: "With a cart you can haul more things at a time.",
   cost: 3,
   bonusCoins: 2,
   timeSaved: 5,
@@ -132,13 +139,27 @@ var cart = {
 
 // Weapons //
 var staff = {
-  msg: "The staff is a good starter weopon to learn balance and control.",
+  name: "Wooden Staff",
+  id: "staff",
+  type: "weapon",
+  msg: "The staff is a good starter weapon to learn balance and control.",
   cost: 3,
   damage: 1,
 }
 var knife = {
-  msg: "The knife is a handy tool that can double as a weopon",
+  name: "Knife",
+  id: "knife",
+  type: "weapon",
+  msg: "The knife is a handy tool that can double as a weapon",
   cost: 5,
+  damage: 1,
+}
+var sling = {
+  name: "Sling Shot",
+  id: "sling",
+  type: "weapon",
+  msg: "The sling shot can be used to hunt small animals.",
+  cost: 4,
   damage: 1,
 }
 
@@ -159,9 +180,10 @@ var visibility = {
 // Shop buttons //
 var shopButtons = {
   axe: 1,
-  cart: 0,
-  staff: 0,
-  knife: 0,
+  cart: 1,
+  staff: 1,
+  knife: 1,
+  sling: 1,
 }
 // Global array to store onclick events before they are set to null/disabled while they are busy, then this array can be used to set them back.  There is probably a better way to do this.
 var prevOnclick = [];
@@ -310,11 +332,6 @@ function writeInventory() {
   // create array of inventory Objects
   let keys = getKeys("inventory");
   console.log(`keys array = ${keys}`);
-  // let keys = [];
-  // for (let key in inventory){
-  //  if (inventory.hasOwnProperty(key)) keys.push(key);
-  // console.log(`inventory key = ${key}`);
-  // }
 
   // create html for inventory to insert on the page
   let inventoryHtml = "";
@@ -326,7 +343,6 @@ function writeInventory() {
     if (inventory[myObj] > 0) {
       inventoryHtml += `<div id="${myObj}" class="inventory">${myObj}: <span id="${myObj}Count">${inventory[myObj]}</span></div>`
     }
-    // console.log(inventoryHtml);
   }
   // write out the updated inventory
   document.getElementById("inventory").innerHTML = inventoryHtml;
@@ -375,11 +391,12 @@ function checkVisibility(name) {
 }
 
 function updateHtmlPay(item){
+if (this[item].type == "tool"){
   let name = this[item].primary;
   let idToUpdate = this[name].htmlPayId;
   let newPay = this[name].coinsEarned + this[item].bonusCoins;
   document.getElementById(idToUpdate).innerHTML = `+${newPay}`;
-
+}
 }
 
 // Send message in the shop
@@ -444,4 +461,54 @@ function purchase(item) {
     sendShopMessage("You don't have enough money for that.")
   }
 
+}
+
+function buildShopButtons(name,cost,id){
+  let myhtml = `<div id="${id}" class="button shop tooltip" onclick="purchase('${id}')">
+    ${name}
+    <span id='${id}Cost' class="tooltiptext">
+      ${cost} coins
+    </span>
+  </div>`;
+  return myhtml;
+}
+
+function buildShop(){
+  let msg = "What would you like to purchase???";
+  document.getElementById('shopMsg').innerHTML = msg;
+  // html variables to insert into document
+  let toolHtml = "";
+  let weaponHtml = "";
+  // Get the array of possible shop buttons
+  let shopButtonKeys = getKeys("shopButtons");
+
+  // Iterate through the array to compile html
+  for (let i=0; i<shopButtonKeys.length; i++){
+    let button = shopButtonKeys[i];
+    console.log(`button = ${button}`);
+    if (shopButtons[button] == 1) { //If one the button should be visible
+      // Gather button pieces
+      let name = this[button].name;
+      let cost = this[button].cost;
+      let id = this[button].id;
+      // let type = this[button].type;
+        // build tool button
+      switch (this[button].type) {
+        case "tool":
+          toolHtml += buildShopButtons(name,cost,id)
+          console.log(`matched ${name} for tool`);
+          break;
+        case "weapon":
+          weaponHtml += buildShopButtons(name,cost,id)
+          console.log(`matched ${name} for weapon`);
+          break;
+        default: console.log(`${button} couldn't be built, no Type`);
+      }
+    }
+    else {
+      console.log(`${button} should not be visible`);
+    }
+  }
+  document.getElementById('shopTools').innerHTML = toolHtml;
+  document.getElementById('shopWeapons').innerHTML = weaponHtml;
 }
