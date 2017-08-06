@@ -43,12 +43,13 @@ var coin = 0;
 // Inventory //
 var inventory = {
   axe: 0,
+  cart: 0,
   staff: 0,
-  knife: 0,
-  recurveBow: 0,
-  longBow: 0,
-  pony: 0,
-  horse: 0,
+  // knife: 0,
+  // recurveBow: 0,
+  // longBow: 0,
+  // pony: 0,
+  // horse: 0,
 }
 
 // skills //
@@ -78,11 +79,13 @@ var staffSkills = {
   time: 100,
   type: "training",
   trustLevel: 2,
+  requirement: "staff",
 }
 // jobs //
 var gatherWood = {
   htmlClass: "earnCoin",
   htmlId: "gatherWood",
+  htmlPayId: "gatheringWoodPayAmount",
   msg: "Gathering wood.",
   coinsEarned: 1,
   difficulty: 1,
@@ -92,6 +95,7 @@ var gatherWood = {
 var runDelivery = {
   htmlClass: "earnCoin",
   htmlId: "runDelivery",
+  htmlPayId: "runDeliveryPayAmount",
   msg: "Running delivery.",
   coinsEarned: 2,
   difficulty: 1,
@@ -113,7 +117,8 @@ var axe = {
   msg: "The axe makes gathering wood a lot easier!",
   cost: 2,
   bonusCoins: 1,
-  timeSaved: 3
+  timeSaved: 3,
+  primary: "gatherWood",
 }
 
 var cart = {
@@ -121,6 +126,8 @@ var cart = {
   cost: 3,
   bonusCoins: 2,
   timeSaved: 5,
+  primary: "runDelivery",
+  secondary: "gatherWood",
 }
 
 // Weapons //
@@ -156,6 +163,8 @@ var shopButtons = {
   staff: 0,
   knife: 0,
 }
+// Global array to store onclick events before they are set to null/disabled while they are busy, then this array can be used to set them back.  There is probably a better way to do this.
+var prevOnclick = [];
 
 if (debug == 1) {
   console.log("Game Started");
@@ -181,7 +190,17 @@ function changeButtonState(name, state) {
   let buttonList = document.getElementsByClassName(htmlClass); //get the list of practice buttons by class.
   // Iterate through the list of buttons and disable them.
   for (let i = 0; i < buttonList.length; i++) {
-    buttonList[i].disabled = state;
+    if (state == "disabled"){
+      prevOnclick.push(buttonList[i].onclick);
+        console.log(`Stored onclick = ${prevOnclick[i]}`);
+      buttonList[i].classList.add("disabled");
+      // buttonList[i].onclick = "disabled";
+    }
+    else {
+      // console.log(`Re-enable buttons ${prevOnclick[i]}`);
+      buttonList[i].classList.remove("disabled");
+      // buttonList[i].onclick = "prevOnclick[i]";
+    }
   }
 }
 
@@ -208,7 +227,7 @@ function buttonCoolDown(name) {
       setTimeout(coolDown, 10, countDown, htmlId);
     } else {
       document.getElementById(htmlId).style.background = "";
-      changeButtonState(name, false);
+      changeButtonState(name, "enabled");
       earnTrust(name);
       // Check to see if anything new should be made visible
       checkVisibility(name);
@@ -219,7 +238,20 @@ function buttonCoolDown(name) {
 }
 
 function addMoney(name) {
-  coin = coin + this[name].coinsEarned;
+  // Check inventory for tools to affect earnings
+  let tools = getKeys("inventory");
+  let bonusEarned = 0;
+
+  for(let i=0; i< tools.length; i++){
+    let tool = tools[i];
+    if (inventory[tool] > 0){
+      if (this[tool].primary == name || this[tool].secondary == name){
+        bonusEarned =  this[tool].bonusCoins;
+      }
+    }
+  }
+
+  coin = coin + this[name].coinsEarned + bonusEarned;
   document.getElementById("coins").innerHTML = coin;
 }
 
@@ -330,8 +362,24 @@ function checkVisibility(name) {
       //let myNewClass = myClass.replace("hidden", "");
     }
 
+    // Unhide any buttons based on requirements met.
+    let requirement = this[myObj].requirement;
+    if (inventory[requirement] > 0) {
+      visibility[myObj] = 1;
+      document.getElementById(htmlId).classList.remove('hidden');
+
+    }
+
 
   }
+}
+
+function updateHtmlPay(item){
+  let name = this[item].primary;
+  let idToUpdate = this[name].htmlPayId;
+  let newPay = this[name].coinsEarned + this[item].bonusCoins;
+  document.getElementById(idToUpdate).innerHTML = `+${newPay}`;
+
 }
 
 // Send message in the shop
@@ -342,15 +390,22 @@ function sendShopMessage(msg) {
 
 function earnCoin(name, action, htmlClass) {
   let actionId = action;
-  // let name = job;
+
+  // Check to see if this group of buttons is already disabled, if so, exit function.
+  let htmlId = this[name].htmlId;
+  let htmlClassList = document.getElementById(htmlId).className;
+  if (htmlClassList.match("disabled") ){
+    console.log("You cannot click on a a group of buttons that are still in their cooldown state.");
+    return; // Exit, do not allow any actions.
+  }
 
   if (debug == 1) {
     console.log(`name = ${name}, action = ${action}, htmlClass = ${htmlClass}`);
   }
   // get object
 
-  //disable class
-  changeButtonState(name, true);
+  //disable class of buttons
+  changeButtonState(name, "disabled");
 
   //cooldown button
   buttonCoolDown(name);
@@ -382,7 +437,9 @@ function purchase(item) {
     document.getElementById("coins").innerHTML = coin;
     console.log(`${item} = ${inventory[item]}`);
     writeInventory();
-    sendShopMessage(`You purchased a ${item}`)
+    sendShopMessage(`You purchased a ${item}`);
+    checkVisibility(item);
+    updateHtmlPay(item);
   } else {
     sendShopMessage("You don't have enough money for that.")
   }

@@ -147,12 +147,15 @@ button:hover, .button:hover {
   background: #333;
   color: #AAA;
   outline: 0px;
+  cursor: default;
 }
 
 button:focus, .button:focus {outline:0;}
-button:disabled, .button:disabled {
+button:disabled, .button.disabled {
   background-color: #333;
   color: #AAA;
+  opacity: 0.65;
+ cursor: not-allowed;
 }
 
 /*div.button div.coolDown {
