@@ -40,6 +40,47 @@ const debug = 1;
 
 var coin = 0;
 
+// Timmer for apprentice duties //
+var taskTimer = 0;
+var numb = 1;
+var taskCount = {
+  number: function(numb){
+    let taskKeys = getKeys("tasks");
+      console.log("task key array = " + taskKeys);
+    let taskKeysCount = taskKeys.length // +1 so we don't start count from 0
+      console.log("taskKeysCount = " + taskKeysCount);
+    if (numb < taskKeysCount){
+      numb++;
+    }
+    else if (numb == taskKeysCount) {
+      numb = 1;
+      console.log("Reset msgKey to 1");
+    } // if the count is greater than the length of the number of keys then reset it to 1.
+    return numb;
+  }
+}
+var tasks = {
+  1: {
+    button: "Feed the horses.",
+    msg: "Feeding the horses.",
+  },
+  2: {
+    button: "Shine boots.",
+    msg: "Who needs this many boots?",
+  },
+  3: {
+    button: "Polish knights helm.",
+    msg: "Polishing his helm.",
+  }
+}
+var taskObj = {
+  name: "tasks",
+  htmlId: "taskButton",
+  htmlClass: "mainButtons",
+  time: 100,
+  type: "tasks",
+}
+
 // Inventory //
 var inventory = {
   axe: 0,
@@ -192,7 +233,14 @@ if (debug == 1) {
   console.log("Game Started");
 }
 
-function sendMessage(name) {
+function sendMessage(newMsg) {
+  let msg = document.getElementById("messages").innerHTML;
+  document.getElementById("messages").innerHTML = msg;
+  msg = '<div class="message">' + newMsg + "</div>" + msg;
+  document.getElementById("messages").innerHTML = msg;
+
+}
+function buildMessage(name) {
   objName = name;
 
   if (debug == 1) {
@@ -200,11 +248,11 @@ function sendMessage(name) {
   }
 
   // Prepend new message to message list
-  let msg = document.getElementById("messages").innerHTML;
-  msg = '<div class="message">' + this[objName].msg + "</div>" + msg;
+    // let msg = document.getElementById("messages").innerHTML;
+    msg = this[objName].msg
   // Write out new message
-  document.getElementById("messages").innerHTML = msg;
-
+  // document.getElementById("messages").innerHTML = msg;
+  sendMessage(msg);
 }
 
 function changeButtonState(name, state) {
@@ -314,7 +362,7 @@ function getKeys(obj) {
   let keys = [];
   for (let key in this[obj]) {
     if (this[obj].hasOwnProperty(key)) keys.push(key);
-    console.log(`inventory key = ${key}`);
+    // console.log(`inventory key = ${key}`);
   }
   return keys;
 }
@@ -385,8 +433,6 @@ function checkVisibility(name) {
       document.getElementById(htmlId).classList.remove('hidden');
 
     }
-
-
   }
 }
 
@@ -428,7 +474,7 @@ function earnCoin(name, action, htmlClass) {
   buttonCoolDown(name);
 
   //add message
-  sendMessage(name);
+  buildMessage(name);
 
   //add money
   if (this[name].type == "job") {
@@ -511,4 +557,42 @@ function buildShop(){
   }
   document.getElementById('shopTools').innerHTML = toolHtml;
   document.getElementById('shopWeapons').innerHTML = weaponHtml;
+}
+
+// Perform regular apprentice duties
+// This will have a slow burn down
+// requirements
+//   clicking the button will:
+//     -Add time to the burndown
+//     -Trust level will affect the max amount of time that can be accrued.
+//   When the time runs out it disables the other buttons.
+//   Trust level can increase the max time.
+function performDuties(){
+  // Add time
+  taskTimer += 10;
+  console.log(taskTimer);
+  // build message
+  let name = "taskObj";
+  changeButtonState(name, "disabled");
+  buttonCoolDown(name)
+  numb = taskCount.number(numb); //Get a number to use as the msg key.
+  console.log("msgKey = " + numb);
+  // let tasks = getKeys(taskButton);
+  let msgNumb = 1;
+  switch (numb) {
+    case 1:  // first
+      msgNumb = 3;
+      break;
+    default: // everything in between
+      msgNumb = numb -1;
+      break;
+  }
+  let msg = tasks[msgNumb].msg;
+  document.getElementById('taskButton').innerHTML = tasks[numb].button;
+  // document.getElementById('taskButton').onclick = `performDuties('${msgKey}')`;
+  // send message
+  sendMessage(msg);//**sendMessage needs to be broken down into 2 functions, one to build the message for the regular buttons and the other to accept the msg itself and post it... postMsg is probably a better name.  buildMsg and postMsg
+
+  // cooldown button
+  // Enable buttons, if necessary, send message.
 }

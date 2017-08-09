@@ -127,12 +127,18 @@ header, #content, #middle, #sidebar {
 //	border: solid 1px #ccc;
 }
 
+#taskButton {
+  width: 100%;
+  padding: 10px 2px;
+  font-size: 1.2em;
+}
+
 button, .button{
   border-radius: 5px;
   padding: 2px;
-  margin: 0px 2px;
+  margin: 0px 2px 10px 2px;
   width:80px;
-  min-height: 40px;
+  /*min-height: 40px;*/
   background-color: inherit;
   border-style: solid;
   border-width: 1px;
